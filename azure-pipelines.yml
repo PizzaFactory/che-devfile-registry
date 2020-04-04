@@ -31,3 +31,7 @@ steps:
     docker push $(imageName):$(build.buildId)
   displayName: 'docker push'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
+
+- script: REGISTRY=$(containerRegistry) arbitrary-users-patch/build_images.sh
+  displayName: 'Build and push runtime images.'
+
