@@ -13,7 +13,7 @@ components:
   -
     type: chePlugin
     id: redhat/java/latest
-    memoryLimit: 1280MiB
+    memoryLimit: 1280Mi
   -
     type: dockerimage
     alias: tools
@@ -30,7 +30,7 @@ components:
         value: $(JAVA_OPTS)
     memoryLimit: 1000Mi
     endpoints:
-      - name: '8080/tcp'
+      - name: '8080-tcp'
         port: 8080
     mountSources: true
     volumes:
