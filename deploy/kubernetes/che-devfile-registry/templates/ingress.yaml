@@ -1,6 +1,3 @@
-{{- define "hostname" -}}
-{{- .Values.hostnameOverride | default (printf "che-plugin-registry-%s" .Release.Namespace) -}}
-{{- end -}}
 #
 # Copyright (c) 2018-2020 Red Hat, Inc.
 # This program and the accompanying materials are made
@@ -18,7 +15,7 @@ metadata:
     kubernetes.io/ingress.class: {{ .Values.global.ingress.class }}
 spec:
   rules:
-  - host: {{ template "hostname" . -}} . {{- .Values.global.ingressDomain }}
+  - host: {{ template "devfile.hostname" . -}} . {{- .Values.global.ingressDomain }}
     http:
       paths:
       - path: /
@@ -28,6 +25,6 @@ spec:
 {{- if .Values.cheDevfileRegistryIngressSecretName }}
   tls:
   - hosts:
-    - {{ template "hostname" . -}} . {{- .Values.global.ingressDomain }}
+    - {{ template "devfile.hostname" . -}} . {{- .Values.global.ingressDomain }}
     secretName: {{ .Values.cheDevfileRegistryIngressSecretName }}
 {{- end -}}
