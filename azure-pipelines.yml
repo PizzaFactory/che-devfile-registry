@@ -6,6 +6,14 @@
 trigger:
 - pizzafactory
 
+schedules:
+- cron: "20 12 * * *"
+  displayName: Daily build
+  branches:
+    include:
+    - pizzafactory
+  always: true
+
 variables:
   containerRegistry: camino.azurecr.io
   organization: eclipse
@@ -27,4 +35,13 @@ steps:
 
 - script: docker push $(containerRegistry)/$(organization)/che-devfile-registry:$(imageTag)
   displayName: 'push to ACR'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
+
+- task: AzureCLI@2
+  displayName: 'Imports images'
+  inputs:
+    azureSubscription: 'camino: BizSpark (1fbdb4bb-441e-4922-ba1f-ffd04f533ea1)'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: 'git grep ''  image:'' devfiles | awk ''!/camino.azurecr.io|quay.io\/eclipse/ { print $NF }'' | sort | uniq | awk ''{print "az acr import --force --name camino --source " $0 }''| sh -x'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
