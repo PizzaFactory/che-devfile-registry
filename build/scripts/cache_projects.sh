@@ -34,11 +34,7 @@ function cache_project() {
   local sparse_checkout_dir="$4"
 
   rm -fr "$TEMP_REPO"
-  git clone "$repo" -b "$branch" --depth 1 "$TEMP_REPO" -q || (
-     # In case branch is commitId.
-     git clone "$repo" "$TEMP_REPO" -q
-     echo "info: Fatal error by Git was recovered." > /dev/stderr
-  )
+  git clone "$repo" -b "$branch" --depth 1 "$TEMP_REPO" -q
   pushd "$TEMP_REPO" &>/dev/null
     if [ -n "$sparse_checkout_dir" ]; then
       echo "    Using sparse checkout dir '$sparse_checkout_dir'"
@@ -117,11 +113,6 @@ for devfile in "${devfiles[@]}"; do
 
     location=$(echo "$project" | jq -r '.source.location')
     branch=$(echo "$project" | jq -r '.source.branch')
-    commitId=$(echo "$project" | jq -r '.source.commitId')
-    if [[ "$commitId" != "null" ]]; then
-      [[ "$branch" ]] && [[ "$branch" != "null" ]] && echo "Can't use both branch and commitId." > /dev/stderr && exit 1
-      branch="$commitId"
-    fi
     if [[ ! "$branch" ]] || [[ "$branch" == "null" ]]; then
       branch="master"
     fi
