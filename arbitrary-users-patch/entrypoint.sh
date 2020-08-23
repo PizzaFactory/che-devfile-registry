@@ -24,6 +24,13 @@ if ! whoami &> /dev/null; then
     echo "${USER_NAME:-user}:x:$(id -u):0:${USER_NAME:-user} user:${HOME}:/bin/bash" >> /etc/passwd
     echo "${USER_NAME:-user}:x:$(id -u):" >> /etc/group
   fi
+  if [ -w /etc/shadow ]; then
+    echo "${USER_NAME:-user}:!:18183:0:99999:7:::" >> /etc/shadow
+    if sudo echo &> /dev/null; then
+      sudo chmod g-w /etc/shadow
+      sudo chgrp shadow /etc/shadow
+    fi
+  fi
 fi
 
 exec "$@"

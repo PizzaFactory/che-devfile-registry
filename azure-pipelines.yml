@@ -24,18 +24,22 @@ pool:
 
 steps:
 - script: ./build.sh -r $(containerRegistry) -o $(organization) -t $(imageTag) --offline
-  displayName: 'build'
+  displayName: 'Build registry'
 
 - task: Docker@1
   inputs:
     command: login
     containerregistrytype: Container Registry
     dockerRegistryEndpoint: camino.azurecr.io
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
 
 - script: docker push $(containerRegistry)/$(organization)/che-devfile-registry:$(imageTag)
   displayName: 'push to ACR'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
+
+- script: arbitrary-users-patch/build_images.sh --push
+  displayName: 'Build and push patched images.'
+  env:
+    REGISTRY: 'camino.azurecr.io' 
 
 - task: AzureCLI@2
   displayName: 'Imports images'
