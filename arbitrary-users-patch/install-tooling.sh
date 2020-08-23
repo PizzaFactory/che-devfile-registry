@@ -10,7 +10,7 @@
 
 set -e
 
-TOOLING=(vim nano)
+TOOLING=(vim nano git sudo)
 
 if command -v dnf 2> /dev/null; then
   dnf install -y "${TOOLING[@]}"
@@ -26,3 +26,7 @@ elif command -v apt-get 2> /dev/null; then
 elif command -v apk 2> /dev/null; then
   apk add --no-cache "${TOOLING[@]}"
 fi
+
+echo "%root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/00-che-user
+chmod 660 /etc/sudoers.d/00-che-user
+
