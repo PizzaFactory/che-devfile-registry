@@ -2,5 +2,5 @@
 displayName: Bitcoin-core
 description: Environment for developing Bitcoin-core node.
 tags: ["C/C++", "clang", "g++", "gdb", "Bitcoin", "Crypto-currency"]
-icon: https://commons.wikimedia.org/wiki/File:Bitcoin_logo.svg#/media/File:Bitcoin.svg/
+icon: https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg
 globalMemoryLimit: 3Gi
