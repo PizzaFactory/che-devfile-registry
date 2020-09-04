@@ -1,0 +1,54 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: bitcoin-core-
+projects:
+  - name: bitcoin
+    source:
+      location: 'https://github.com/bitcoin/bitcoin.git'
+      type: git
+      branch: master
+components:
+  - mountSources: true
+    memoryLimit: 2Gi
+    type: dockerimage
+    alias: bitcoin-dev
+    image: 'pizzafactory0contorno/bitcoin-core-dev:debian-10.2_broadway'
+  - id: eclipse-cdt/cdt-vscode/latest
+    type: chePlugin
+apiVersion: 1.0.0
+commands:
+  - name: 01.configure
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/bitcoin'
+        type: exec
+        command: ./autogen.sh && ./configure --with-incompatible-bdb
+        component: bitcoin-dev
+  - name: 02.build
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/bitcoin'
+        type: exec
+        command: bear make
+        component: bitcoin-dev
+  - name: 03.run
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/bitcoin'
+        type: exec
+        command: src/bitcoind -regtest
+        component: bitcoin-dev
+#  - name: debug
+#    actions:
+#      - referenceContent: |
+#          {
+#            "version": "0.2.0",
+#            "configurations": [
+#                {
+#                    "type": "gdb",
+#                    "name": "Debug bitcoind",
+#                    "request": "launch",
+#                    "program": "/projects/bitcoin/src/bitcoind",
+#                    "arguments": "-regtest"
+#                }
+#            ]
+#          }
+#        type: vscode-launch
