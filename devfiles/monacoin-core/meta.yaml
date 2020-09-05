@@ -1,0 +1,6 @@
+---
+displayName: Monacoin-core
+description: Environment for developing Monacoin-core node.
+tags: ["C/C++", "clang", "g++", "gdb", "Monacoin", "Crypto-currency"]
+icon: /images/monacoin.svg
+globalMemoryLimit: 3Gi

@@ -1,0 +1,54 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: monacoin-core-
+projects:
+  - name: monacoin
+    source:
+      location: 'https://github.com/monacoinproject/monacoin.git'
+      type: git
+      branch: master-0.17
+components:
+  - mountSources: true
+    memoryLimit: 2Gi
+    type: dockerimage
+    alias: monacoin-dev
+    image: 'pizzafactory0contorno/bitcoin-core-dev:debian-10.2_broadway'
+  - id: eclipse-cdt/cdt-vscode/latest
+    type: chePlugin
+apiVersion: 1.0.0
+commands:
+  - name: 01.configure
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/monacoin'
+        type: exec
+        command: ./autogen.sh && ./configure --with-incompatible-bdb
+        component: monacoin-dev
+  - name: 02.build
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/monacoin'
+        type: exec
+        command: bear make
+        component: monacoin-dev
+  - name: 03.run
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/monacoin'
+        type: exec
+        command: src/monacoind -regtest
+        component: monacoin-dev
+#  - name: debug
+#    actions:
+#      - referenceContent: |
+#          {
+#            "version": "0.2.0",
+#            "configurations": [
+#                {
+#                    "type": "gdb",
+#                    "name": "Debug monacoind",
+#                    "request": "launch",
+#                    "program": "/projects/monacoin/src/monacoind",
+#                    "arguments": "-regtest"
+#                }
+#            ]
+#          }
+#        type: vscode-launch
