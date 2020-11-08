@@ -11,7 +11,7 @@ projects:
 components:
 -
   type: chePlugin
-  id: redhat/java/latest
+  id: redhat/java8/latest
   memoryLimit: 1280Mi
 -
   type: dockerimage
@@ -40,6 +40,10 @@ components:
       discoverable: 'true'
       public: 'true'
     port: 8443
+  - name: debug
+    attributes:
+      public: 'false'
+    port: 5005
   volumes:
   - name: m2
     containerPath: /home/user/.m2
