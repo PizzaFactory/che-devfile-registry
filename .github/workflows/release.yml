@@ -10,11 +10,16 @@
 name: Release Che Devfile Registry
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'release version in format 7.y.z'
+        required: true
   push:
     branches: 
-      - release
+      - 'release'
     paths:
-      - VERSION
+      - 'VERSION'
 
 jobs:
   release-build-publish:
