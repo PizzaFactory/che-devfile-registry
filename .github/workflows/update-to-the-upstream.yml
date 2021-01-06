@@ -3,6 +3,8 @@ name: UpdateToTheUpstream
 on:
   schedule:
     - cron: "0 6 * * 5"
+  workflow_dispatch:
+
 jobs:
   pr-for-merging-upstream:
 
@@ -20,14 +22,10 @@ jobs:
         git fetch --all
         git checkout -b prp-update-to-the-upstream
         git merge up/master -m 'Update to the upstream.'
-    - name: install hub
-      uses: geertvdc/setup-hub@v1.0.0
+        git push -u origin prp-update-to-the-upstream
     - name: create PR
-      env:
-        GITHUB_USER: ${{ secrets.GITHUB_USER }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        hub pull-request -b pizzafactory:pizzafactory -m "[Scheduled] Update to the upstream" --push -f
+        gh pr create --base pizzafactory --head PizzaFactory:prp-update-to-the-upstream -t "[Scheduled] Update to the upstream." -b ""
     - name: Notify to Google Chat
       uses: Co-qn/google-chat-notification@releases/v1
       with:
