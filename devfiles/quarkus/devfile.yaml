@@ -24,8 +24,10 @@ components:
           -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom
           -Duser.home=/home/user"
       - name: MAVEN_OPTS
-        value: $(JAVA_OPTS)  
-    memoryLimit: 4927M
+        value: $(JAVA_OPTS)
+      - name: QUARKUS_HTTP_HOST
+        value: 0.0.0.0
+    memoryLimit: 4G
     mountSources: true
     volumes:
       - name: m2
@@ -76,7 +78,7 @@ commands:
       -
         type: exec
         component: centos-quarkus-maven
-        command: "./mvnw package -Dnative -Dmaven.test.skip"
+        command: "./mvnw package -Dnative -Dmaven.test.skip -Dquarkus.native.native-image-xmx=2G"
         workdir: ${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started
 
   -
