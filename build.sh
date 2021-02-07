@@ -78,6 +78,12 @@ function parse_arguments() {
 
 parse_arguments "$@"
 
+if [[ $TARGET = "offline-registry" ]]; then
+  OFFLINE_ARGS="--build-arg PATCHED_IMAGES_ORG=${ORGANIZATION} --build-arg PATCHED_IMAGES_REG=${REGISTRY}"
+else
+  OFFLINE_ARGS=""
+fi
+
 BUILD_COMMAND="build"
 if [[ -z $BUILDER ]]; then
     echo "BUILDER not specified, trying with podman"
@@ -118,7 +124,8 @@ case $VERSION in
         -t "${IMAGE}" \
         -f ${DOCKERFILE} \
         --build-arg "USE_DIGESTS=${USE_DIGESTS}" \
-        --target "${TARGET}" .
+        --target "${TARGET}" \
+        ${OFFLINE_ARGS} .
     ;;
   *)
     echo "Release version specified in $(find . -name VERSION): Building plugin registry for release ${VERSION}."
@@ -127,6 +134,7 @@ case $VERSION in
         -f "${DOCKERFILE}" \
         --build-arg "PATCHED_IMAGES_TAG=${VERSION}" \
         --build-arg "USE_DIGESTS=${USE_DIGESTS}" \
-        --target "${TARGET}" .
+        --target "${TARGET}" \
+        ${OFFLINE_ARGS} .
     ;;
 esac
