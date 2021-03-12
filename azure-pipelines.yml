@@ -17,7 +17,7 @@ schedules:
 
 variables:
   containerRegistry: camino.azurecr.io
-  organization: eclipse
+  organization: camino
   imageTag: nightly
 
 jobs:
