@@ -7,7 +7,7 @@
 TRIGGER_RELEASE=0 
 NOCOMMIT=0
 TMP=""
-REPO=git@github.com:eclipse/che-devfile-registry
+REPO=git@github.com:eclipse-che/che-devfile-registry
 REGISTRY=quay.io
 ORGANIZATION=eclipse
 
@@ -29,12 +29,16 @@ usage ()
 
 performRelease() 
 {
+  set -xe
+
   #Build and push patched base images and happy path image
   TAG=$(head -n 1 VERSION)
   export TAG
-  /bin/bash arbitrary-users-patch/happy-path/build_happy_path_image.sh --push
-  /bin/bash arbitrary-users-patch/build_images.sh --push
-
+  # Build and push base images
+  ./arbitrary-users-patch/build_images.sh --push --rm 
+  # Build and push happy path image, which depends on the above
+  ./arbitrary-users-patch/happy-path/build_happy_path_image.sh --push --rm
+  
   #Build and push images
   PLATFORMS="$(cat PLATFORMS)"
   IMAGE=che-devfile-registry
@@ -42,6 +46,8 @@ performRelease()
   SHORT_SHA1=$(git rev-parse --short HEAD)
   DOCKERFILE_PATH=./build/dockerfiles/Dockerfile
   docker buildx build --push --platform "${PLATFORMS}" --tag "${REGISTRY}/${ORGANIZATION}/${IMAGE}:${VERSION}" --tag "${REGISTRY}/${ORGANIZATION}/${IMAGE}:${SHORT_SHA1}" -f ${DOCKERFILE_PATH} --build-arg PATCHED_IMAGES_TAG="${VERSION}" --target registry .
+
+  set +xe
 }
 
 if [[ ! ${VERSION} ]]; then
