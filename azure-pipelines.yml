@@ -35,7 +35,10 @@ jobs:
           containerregistrytype: Container Registry
           dockerRegistryEndpoint: camino.azurecr.io
 
-      - script: docker push $(containerRegistry)/camino/che-devfile-registry:$(imageTag)
+      - script: |
+          docker tag $(containerRegistry)/$(organization)/che-devfile-registry:$(imageTag) \
+                     $(containerRegistry)/camino/che-devfile-registry:$(imageTag)
+          docker push $(containerRegistry)/camino/che-devfile-registry:$(imageTag)
         displayName: 'push to ACR'
         condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/pizzafactory'))
 
