@@ -48,6 +48,12 @@ jobs:
     pool:
       vmImage: 'Ubuntu-16.04'
     steps:
+      - task: Docker@1
+        inputs:
+          command: login
+          containerregistrytype: Container Registry
+          dockerRegistryEndpoint: camino.azurecr.io
+
       - script: arbitrary-users-patch/build_images.sh --push
         displayName: 'Build and push patched images.'
         env:
