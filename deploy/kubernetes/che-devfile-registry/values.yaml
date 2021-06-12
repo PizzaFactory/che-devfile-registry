@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
-cheDevfileRegistryImage: camino.azurecr.io/che-devfile-registry:nightly
+cheDevfileRegistryImage: camino.azurecr.io/che-devfile-registry:next
 cheDevfileRegistryImagePullPolicy: Always
 cheDevfileRegistryMemoryLimit: 256Mi
 cheDevfileRegistryIngressSecretName: che-tls
