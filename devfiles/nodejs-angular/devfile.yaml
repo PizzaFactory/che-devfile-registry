@@ -11,12 +11,12 @@ projects:
 components:
   -
     type: chePlugin
-    id: che-incubator/typescript/latest
+    id: vscode/typescript-language-features/latest
   -
     type: dockerimage
     alias: nodejs
     image: quay.io/eclipse/che-nodejs10-community:next
-    memoryLimit: 1Gi
+    memoryLimit: 2Gi
     endpoints:
       - name: 'angular'
         port: 4200
